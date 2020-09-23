@@ -1,6 +1,6 @@
 package application;
 
-import java.util.HashSet;
+
 import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
@@ -14,34 +14,29 @@ import java.util.TreeSet;
  */
 
 public class Element {
-    public int elem1, elem2, elem3, elem4, elem5, elem6, elem7, elem;
-    public boolean isRealCombination;//создать метод для проверки выигрыша и выводить окно при проигрышном раскладе
+    public int elem1, elem2, elem3, elem4, elem5, elem6, elem7, elem8, elem9, elem10,elem11,elem12,elem13,elem14,elem15,elem16;
+    public boolean isRealCombination;//является ли данная комбинация решаемой
     public int[][] board;
-
-    private int e; //номер ряда пустой клетки(координата y)
-
+    private int emptyY; //номер ряда пустой клетки(координата y)
     private int sum;
     private boolean hasNumber = false;
-
     Random random = new Random();
 
     public void generateNumbers() {  //расставляем фишки + считаем номер ряда пустой клетки для проверки решаемости
-        Set<Integer> avaliableCounts = new TreeSet<>();
-        for (int i = 0; i < 4; i++) {
+        Set<Integer> availableCounts = new TreeSet<>();
+        board = new int[][]{{elem1, elem5, elem9, elem13}, {elem2, elem6, elem10, elem14}, {elem3, elem7, elem11, elem15}, {elem4, elem8, elem12, elem16}};
+        for (int i = 0; i < 4; i++) { //если хотим генерировать случайным образом
             for (int j = 0; j < 4; j++) {
-
                 int number = 0;
                 if (!hasNumber) {
                     number = random.nextInt(16);
-
-
-                    while (!avaliableCounts.contains(number)) {
-                        avaliableCounts.add(number);
+                    while (!availableCounts.contains(number)) {
+                        availableCounts.add(number);
                         hasNumber = true;
                     }
                 }
                 if (number == 0) {
-                    e = j;//номер строки пустой клетки
+                    emptyY = j;//номер строки пустой клетки
                 }
                 board[i][j] = number;
             }
@@ -50,17 +45,18 @@ public class Element {
     }
 
 
-    public void isAbleToBeSolved() {  //проверка на решаемость
+    public void isAbleToBeSolved() { //проверка на решаемость
         sum = 0;
         for (int i = 0; i < 16; i++) {
             for (int j = 0; j < 16; j++) {
-                if (board[i % 4][i / 4] >= board[j % 4][j / 4]) {
+                if ( (board[j % 4][j / 4] != 0) && board[i % 4][i / 4] > board[j % 4][j / 4]) {
                     sum++;
                 }
             }
         }
-        sum = sum + e;
-        isRealCombination = sum % 2 == 0; // количество боьших элементов правее + номер строки пустой фишки нечетно
+        sum = sum + emptyY;
+
+        isRealCombination = sum % 2 == 0; // количество больших элементов правее + номер строки пустой фишки четно
     }
 
 }
