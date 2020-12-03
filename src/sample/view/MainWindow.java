@@ -1,24 +1,28 @@
 package sample.view;
 
-
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
-import sample.logic.Game;
-import sample.logic.Message;
-import sample.logic.Solver;
+import sample.logic.*;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 public class MainWindow {
-    private Game game = new Game();
     public static boolean win = false;
+    private int[][] array1 = new int[][]{{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 0, 15}}; // простой массив для проверки(путь=2)
+
+    private int[][] array2 = new int[][]{{1, 2, 3, 0}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 4}}; //(путь =20)
+
+    private int[][] array3 = new int[][]{{2, 8, 0, 10}, {1, 6, 7, 5}, {11, 9, 13, 3}, {4, 15, 12, 14}};
+    Game game;
+
 
     @FXML
     Button buttonMove;
@@ -53,24 +57,20 @@ public class MainWindow {
 
         win = false;
         game = new Game();
-
         keyPressed(game);
         repaint();
+
     }
 
 
     public void begin() {
-        Solver solver = new Solver(game);
-        solver.countSteps = 0;
-        solver.botFindPath();
-        repaint();
-        win = false;
-        while (!win) {
-            solver.step();
-            repaint();
-        }
-        Message m = new Message();
-        m.win();
+
+        //Board primary = new Board(game.getIntField()); //когда передаем реальное поле с экрана
+        Board primary = new Board(array2); //сейчас передаем заранее заготовленный массив
+        System.out.println("main" + Arrays.deepToString(game.getIntField())); // проверяем правильное ли поле передалось в доску для решателя
+        Solver solver = new Solver(primary);
+
+        System.out.println(solver.solution());
     }
 
 

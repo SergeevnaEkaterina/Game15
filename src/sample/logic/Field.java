@@ -1,35 +1,27 @@
 package sample.logic;
 
 
+import sample.view.MainWindow;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
 public class Field {
-    public static int f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14, f15, f16;
-    public int[][] grid;
-    public int zeroX;
+
+    public int[][] grid = new int[4][4];
+    public int zeroX; //public тк должны изменяться в Game
     public int zeroY;
     private Random random = new Random();
     private Set<Integer> numbers = new HashSet<>();
-    public boolean isSolvable = true;
 
     public Field() {
-            grid = new int[][]{{f1, f5, f9, f13}, {f2, f6, f10, f14}, {f3, f7, f11, f15}, {f4, f8, f12, f16}};
-            generateField();
-            fill();
+        fill();
     }
 
-    public void generateField(){
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                if (grid[i][j]==0) {
-                    zeroY = j;
-                    zeroX = i;
-                }
-            }
-        }
+    public int[][] getGrid() {
+        return grid;
     }
 
     public void fill() {
@@ -50,11 +42,15 @@ public class Field {
                     zeroY = j;
                 }
                 grid[i][j] = value; // присваиваем ячейке число по которому будем брать картинку из сета для картинок
+
             }
         }
-        isAbleToBeSolved();
-        if (!isSolvable) fill();
+        System.out.println("grid" + Arrays.deepToString(grid));//числа на доске переписываются если нерешаемая комбинация
+        if (!isAbleToBeSolved()) fill();
+
+
     }
+
 
     /**
      * Можно показать, что ровно половину из всех возможных 1 307 674 368 000 (=15!) начальных положений пятнашек
@@ -63,8 +59,8 @@ public class Field {
      * Также введем число e — номер ряда пустой клетки (считая с единицы).
      * если сумма ni(от 1 до 15) нечетна, то комбинация нерешаема
      */
-    public void isAbleToBeSolved() {
-        isSolvable = true;
+    public boolean isAbleToBeSolved() {
+        boolean isSolvable = false;
         int counter = 0;
         for (int i = 0; i < 16; i++) {
             for (int j = i + 1; j < 16; j++) {
@@ -74,8 +70,8 @@ public class Field {
                     }
             }
         }
-        if ((counter + zeroY ) % 2 == 0) isSolvable = false;
+        if ((counter + zeroY) % 2 == 0) isSolvable = true;
+        return isSolvable;
     }
-
 
 }
