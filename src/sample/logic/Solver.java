@@ -10,14 +10,38 @@ public class Solver {
     private static class Item {    //класс - сслылка на предыдущие состояния поля
         private Item predecessor;  // ссылка на предыдущее
         private Board board;   // сама позиция
+        private int gx;
+
 
         private Item(Item predecessor, Board board) {
             this.predecessor = predecessor;
             this.board = board;
+            calculateG(this);
+        }
+
+
+        private void calculateG(Item item) { 
+            int g = 0;
+
+            Item itemCurr = item;
+            int hx = item.getBoard().getH();
+            while (true) {
+                g++;
+                itemCurr = itemCurr.predecessor;
+                if (itemCurr == null) {
+                    gx = g + hx;
+
+                    break;
+                }
+            }
         }
 
         public Board getBoard() {
             return board;
+        }
+
+        public int getG() {
+            return gx;
         }
     }
 
@@ -26,7 +50,7 @@ public class Solver {
 
         if (!primaryCondition.isValid()) throw new IllegalArgumentException("Unsolvable");
 
-        Comparator<Item> comp = Comparator.comparingInt(Solver::fx);
+        Comparator<Item> comp = Comparator.comparingInt(Solver.Item::getG);
         //  очередь. Для нахождения приоритетного сравниваем меры,min Мера = max Приоритет
         PriorityQueue<Item> priorityQueue = new PriorityQueue<>(comp);
 
@@ -34,7 +58,7 @@ public class Solver {
         // добавляем исходное поле
         priorityQueue.add(new Item(null, primaryCondition));
 
-        for (;;) {
+        for (; ; ) {
             Item board = priorityQueue.poll();
 
             //   если дошли до решения, сохраняем весь путь ходов в лист
@@ -44,38 +68,22 @@ public class Solver {
                 return;
             }
 
-            Set<Board> closed = new HashSet<>();
-            if (!closed.contains(board.getBoard())) {
 
-                for (Board neighbor : board.board.neighbors()) {
-                    // один из соседей - это позиция которая была ходом раньше
+            for (Board neighbor : board.board.neighbors()) {
+                // один из соседей - это позиция которая была ходом раньше
 
-                    if (neighbor != null && !wasInPath(board, neighbor)) //если уже не содержится в пути(списке рассмотренных)
-                        priorityQueue.add(new Item(board, neighbor));
-                }
+                if (neighbor != null && !wasInPath(board, neighbor)) //если уже не содержится в пути(списке рассмотренных)
+                    priorityQueue.add(new Item(board, neighbor));
             }
-            closed.add(board.getBoard());
+
         }
     }
 
-    //  f(x) = h+g
-    private static int fx(Item item) {
-        Item itemCurr = item;
-        int gx = 0;
-        int hx = item.getBoard().getH();
-        for (;;) {
-            gx++;
-            itemCurr = itemCurr.predecessor;
-            if (itemCurr == null) {
-                return hx + gx;
-            }
-        }
-    }
 
 
     private void insertInPath(Item item) {
         Item item2 = item;
-        for (;;) {
+        for (; ; ) {
             item2 = item2.predecessor;
             if (item2 == null) {
                 return;
@@ -87,7 +95,7 @@ public class Solver {
     // была ли уже такая позиция в пути
     private boolean wasInPath(Item item, Board board) {
         Item item2 = item;
-        for (;;) {
+        for (; ; ) {
             if (item2.board.equals(board)) return true;
             item2 = item2.predecessor;
             if (item2 == null) return false;
