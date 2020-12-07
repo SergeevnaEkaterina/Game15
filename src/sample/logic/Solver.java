@@ -24,6 +24,8 @@ public class Solver {
 
     public Solver(Board primaryCondition) {
 
+        if (!primaryCondition.isValid()) throw new IllegalArgumentException("Unsolvable");
+
         Comparator<Item> comp = Comparator.comparingInt(Solver::fx);
         //  очередь. Для нахождения приоритетного сравниваем меры,min Мера = max Приоритет
         PriorityQueue<Item> priorityQueue = new PriorityQueue<>(comp);
@@ -42,15 +44,17 @@ public class Solver {
                 return;
             }
 
+            Set<Board> closed = new HashSet<>();
+            if (!closed.contains(board.getBoard())) {
 
+                for (Board neighbor : board.board.neighbors()) {
+                    // один из соседей - это позиция которая была ходом раньше
 
-            for (Board neighbor : board.board.neighbors()) {
-                // один из соседей - это позиция которая была ходом раньше
-
-                if (neighbor != null && !wasInPath(board, neighbor)) //если уже не содержится в пути(списке рассмотренных)
-                    priorityQueue.add(new Item(board, neighbor));
+                    if (neighbor != null && !wasInPath(board, neighbor)) //если уже не содержится в пути(списке рассмотренных)
+                        priorityQueue.add(new Item(board, neighbor));
+                }
             }
-
+            closed.add(board.getBoard());
         }
     }
 
@@ -91,7 +95,7 @@ public class Solver {
     }
 
 
-    public Iterable<Board> solution() {
+    public List<Board> solution() {
         System.out.println(path.size());
         return path;
 

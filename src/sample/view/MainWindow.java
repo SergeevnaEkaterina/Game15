@@ -20,7 +20,8 @@ public class MainWindow {
 
     private int[][] array2 = new int[][]{{1, 2, 3, 0}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 4}}; //(путь =20)
 
-    private int[][] array3 = new int[][]{{2, 8, 0, 10}, {1, 6, 7, 5}, {11, 9, 13, 3}, {4, 15, 12, 14}};
+
+    private int[][] array23 = new int[][]{{1,2,3,4}, {5,6,7,8}, {9,10,15,11}, {13,14,0,12}};//4
     Game game;
 
 
@@ -66,8 +67,9 @@ public class MainWindow {
     public void begin() {
 
         //Board primary = new Board(game.getIntField()); //когда передаем реальное поле с экрана
-        Board primary = new Board(array2); //сейчас передаем заранее заготовленный массив
-        System.out.println("main" + Arrays.deepToString(game.getIntField())); // проверяем правильное ли поле передалось в доску для решателя
+      //  System.out.println("main" + Arrays.deepToString(game.getIntField())); // проверяем правильное ли поле передалось в доску для решателя
+        Board primary = new Board(array1); //сейчас передаем заранее заготовленный массив
+
         Solver solver = new Solver(primary);
 
         System.out.println(solver.solution());

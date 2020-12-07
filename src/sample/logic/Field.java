@@ -9,12 +9,18 @@ import java.util.Random;
 import java.util.Set;
 
 public class Field {
-
+    private final int size = 4;
     public int[][] grid = new int[4][4];
     public int zeroX; //public тк должны изменяться в Game
     public int zeroY;
     private Random random = new Random();
     private Set<Integer> numbers = new HashSet<>();
+
+    public Field(int[][] grid) {
+
+        this.grid = grid;
+        fill();
+    }
 
     public Field() {
         fill();
@@ -60,6 +66,19 @@ public class Field {
      * если сумма ni(от 1 до 15) нечетна, то комбинация нерешаема
      */
     public boolean isAbleToBeSolved() {
+        boolean isSolvable = true;
+        int counter = 0;
+        for (int i = 0; i < 16; i++) {
+            for (int j = i + 1; j < 16; j++) {
+                if (grid[j % 4][j / 4] != 0)
+                    if (grid[i % 4][i / 4] > grid[j % 4][j / 4]) {
+                        counter++;
+                    }
+            }
+        }
+        if ((counter + zeroY) % 2 == 0) isSolvable = false;
+        return isSolvable;
+        /**
         boolean isSolvable = false;
         int counter = 0;
         for (int i = 0; i < 16; i++) {
@@ -72,6 +91,7 @@ public class Field {
         }
         if ((counter + zeroY) % 2 == 0) isSolvable = true;
         return isSolvable;
+        */
     }
 
 }

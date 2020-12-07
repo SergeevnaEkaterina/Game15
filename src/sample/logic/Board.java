@@ -41,6 +41,22 @@ public class Board {
         System.out.println("x" + zeroX);
         System.out.println("Y" + zeroY);
     }
+    public boolean isValid() {
+
+         boolean isSolvable = true;
+         int counter = 0;
+         for (int i = 0; i < 16; i++) {
+         for (int j = i + 1; j < 16; j++) {
+         if (tile[j % 4][j / 4] != 0)
+         if (tile[i % 4][i / 4] > tile[j % 4][j / 4]) {
+         counter++;
+         }
+         }
+         }
+         if ((counter + zeroY) % 2 == 0) isSolvable = false;
+         return isSolvable;
+
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
