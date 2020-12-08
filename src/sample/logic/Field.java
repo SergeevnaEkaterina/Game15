@@ -78,20 +78,9 @@ public class Field {
         }
         if ((counter + zeroY) % 2 == 0) isSolvable = false;
         return isSolvable;
-        /**
-        boolean isSolvable = false;
-        int counter = 0;
-        for (int i = 0; i < 16; i++) {
-            for (int j = i + 1; j < 16; j++) {
-                if (grid[j % 4][j / 4] != 0)
-                    if (grid[i % 4][i / 4] > grid[j % 4][j / 4]) {
-                        counter++;
-                    }
-            }
-        }
-        if ((counter + zeroY) % 2 == 0) isSolvable = true;
-        return isSolvable;
-        */
+
+
+
     }
 
 }

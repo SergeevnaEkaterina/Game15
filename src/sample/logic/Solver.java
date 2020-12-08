@@ -20,16 +20,14 @@ public class Solver {
         }
 
 
-        private void calculateG(Item item) { 
+        private void calculateG(Item item) {
             int g = 0;
-
             Item itemCurr = item;
-            int hx = item.getBoard().getH();
             while (true) {
                 g++;
                 itemCurr = itemCurr.predecessor;
                 if (itemCurr == null) {
-                    gx = g + hx;
+                    gx = g;
 
                     break;
                 }
@@ -50,7 +48,7 @@ public class Solver {
 
         if (!primaryCondition.isValid()) throw new IllegalArgumentException("Unsolvable");
 
-        Comparator<Item> comp = Comparator.comparingInt(Solver.Item::getG);
+        Comparator<Item> comp = Comparator.comparingInt(Solver::fx);
         //  очередь. Для нахождения приоритетного сравниваем меры,min Мера = max Приоритет
         PriorityQueue<Item> priorityQueue = new PriorityQueue<>(comp);
 
@@ -79,6 +77,11 @@ public class Solver {
         }
     }
 
+    //  f(x) = h+g
+    private static int fx(Item item) {
+        int hx = item.getBoard().getH();
+        return hx + item.predecessor.getG() + 1;
+    }
 
 
     private void insertInPath(Item item) {
