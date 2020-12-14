@@ -16,23 +16,13 @@ public class Solver {
         private Item(Item predecessor, Board board) {
             this.predecessor = predecessor;
             this.board = board;
-            calculateG(this);
-        }
-
-
-        private void calculateG(Item item) {
-            int g = 0;
-            Item itemCurr = item;
-            while (true) {
-                g++;
-                itemCurr = itemCurr.predecessor;
-                if (itemCurr == null) {
-                    gx = g;
-
-                    break;
-                }
+            if (predecessor != null) {
+                gx = predecessor.gx + 1;
+            } else {
+                gx = 0;
             }
         }
+
 
         public Board getBoard() {
             return board;
@@ -80,7 +70,7 @@ public class Solver {
     //  f(x) = h+g
     private static int fx(Item item) {
         int hx = item.getBoard().getH();
-        return hx + item.predecessor.getG() + 1;
+        return hx + item.getG();
     }
 
 
